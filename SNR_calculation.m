@@ -25,6 +25,7 @@
 % WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
 % ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 % POSSIBILITY OF SUCH DAMAGE.
+% Authour: Kaarmukilan
 
 %%
 clc;
@@ -59,8 +60,8 @@ rss_dBm = 30 + 10*log10(IQ_amplitudes); % RSS in dBm
 
 % Power associated with the Noise - Calculation
 power_dBm = [];
-
-for k = 1 : 1000%floor(num_samples/window_size)
+k1 = 1000;
+for k = 1 : k1%floor(num_samples/window_size)
 
     % Get the current window - 10 samples
     window_start = (k - 1) * window_size + 1;
@@ -90,8 +91,6 @@ title('Signal-to-Noise Ratio (dB)');
 xlabel('Number of Samples');
 ylabel('SNR (dB)');
 
-%%
-
 % Ensure all values are positive to fit
 shift_value = abs(min(SNR_dB)) + 1; 
 life = SNR_dB + shift_value;
@@ -118,3 +117,53 @@ ylabel('Probability Density Function');
 xgrid = linspace(0,100,10000)';
 pdfEst = pdf(pd,xgrid);
 line(xgrid,pdfEst)
+if jam_choice == 1
+    title('Nojamming')
+elseif jam_choice == 2
+    title('Gaussian');
+elseif jam_choice == 3
+    title('Sine');
+end
+%% BER Calculation
+
+ber = 0.5*erfc(sqrt((life))); % Bit Error Rate
+% ber = 0.5*erfc(sqrt(10.^(life/10)));
+
+figure
+semilogy(life,ber,'b.');
+hold on
+% axis([-3 10 10^-5 0.5])
+grid on
+xlabel('SNR, dB');
+ylabel('Bit Error Rate');
+
+if jam_choice == 1
+    title('Nojamming')
+elseif jam_choice == 2
+    title('Gaussian');
+elseif jam_choice == 3
+    title('Sine');
+end
+
+%% Amplitude Error Analysis
+for i = 1:k1
+    alpha_e(k1) = abs(1-sqrt(IQ_amplitudes(k1)));
+end
+figure
+plot(alpha_e)
+title('Amplitude Error Analysis')
+
+
+%% Phase Error Analysis
+
+for ii = 1:k1 % length(IQ_data)
+    if IQ_data(k1,1) > 0
+        phi_e(k1) = atan(IQ_data(k1,1)/IQ_data(k1,2));
+    else
+        phi_e(k1) = pi - atan(IQ_data(k1,1)/IQ_data(k1,2));
+    end
+end
+
+figure
+plot(phi_e)
+title('Phase Error Analysis')
