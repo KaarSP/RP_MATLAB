@@ -36,7 +36,7 @@ close all;
 load("../../dataset/w1.mat");
 
 % Select the type of Jamming: (1) No Jamming / (2) Gaussian / (3) Sine
-jam_choice = 1;
+jam_choice = 3;
 if jam_choice == 1
     IQ_data = Nojamming;
 elseif jam_choice == 2
@@ -147,7 +147,7 @@ end
 
 %% Amplitude Error Analysis
 for i = 1:k1
-    alpha_e(k1) = abs(1-sqrt(IQ_amplitudes(k1)));
+    alpha_e(i) = abs(1-sqrt(IQ_amplitudes(i)));
 end
 figure
 plot(alpha_e)
@@ -158,9 +158,9 @@ title('Amplitude Error Analysis')
 
 for ii = 1:k1 % length(IQ_data)
     if IQ_data(k1,1) > 0
-        phi_e(k1) = atan(IQ_data(k1,1)/IQ_data(k1,2));
+        phi_e(ii) = atan(IQ_data(ii,1)/IQ_data(ii,2));
     else
-        phi_e(k1) = pi - atan(IQ_data(k1,1)/IQ_data(k1,2));
+        phi_e(ii) = pi - atan(IQ_data(ii,1)/IQ_data(ii,2));
     end
 end
 
