@@ -11,7 +11,7 @@
 % 2. Redistributions in binary form must reproduce the above copyright notice, 
 %    this list of conditions, and the following disclaimer in the documentation 
 %    and/or other materials provided with the distribution.
-% 3. Neither the name of [Your Name or Organization] nor the names of its 
+% 3. Neither the name of FAU nor the names of its 
 %    contributors may be used to endorse or promote products derived from 
 %    this software without specific prior written permission.
 % 
@@ -25,6 +25,7 @@
 % WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
 % ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 % POSSIBILITY OF SUCH DAMAGE.
+%
 % Authour: Kaarmukilan
 
 %%
@@ -152,7 +153,6 @@ end
 figure
 plot(alpha_e)
 title('Amplitude Error Analysis')
-
 
 %% Phase Error Analysis
 
