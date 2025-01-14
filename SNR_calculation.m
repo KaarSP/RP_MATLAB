@@ -61,7 +61,7 @@ rss_dBm = 30 + 10*log10(IQ_amplitudes); % RSS in dBm
 
 % Power associated with the Noise - Calculation
 power_dBm = [];
-k1 = 1000;
+k1 = 5000;
 for k = 1 : k1%floor(num_samples/window_size)
 
     % Get the current window - 10 samples
@@ -83,7 +83,7 @@ end
 power_dBm = repelem(power_dBm, window_size);
 
 % Signal-to-Noise (SNR) Calculation
-SNR_dB = rss_dBm(1:10000) - power_dBm;
+SNR_dB = rss_dBm(1:k1*window_size) - power_dBm;
 
 % SNR - Plot
 figure;
@@ -125,45 +125,45 @@ elseif jam_choice == 2
 elseif jam_choice == 3
     title('Sine');
 end
-%% BER Calculation
-
-ber = 0.5*erfc(sqrt((life))); % Bit Error Rate
-% ber = 0.5*erfc(sqrt(10.^(life/10)));
-
-figure
-semilogy(life,ber,'b.');
-hold on
-% axis([-3 10 10^-5 0.5])
-grid on
-xlabel('SNR, dB');
-ylabel('Bit Error Rate');
-
-if jam_choice == 1
-    title('Nojamming')
-elseif jam_choice == 2
-    title('Gaussian');
-elseif jam_choice == 3
-    title('Sine');
-end
-
-%% Amplitude Error Analysis
-for i = 1:k1
-    alpha_e(i) = abs(1-sqrt(IQ_amplitudes(i)));
-end
-figure
-plot(alpha_e)
-title('Amplitude Error Analysis')
-
-%% Phase Error Analysis
-
-for ii = 1:k1 % length(IQ_data)
-    if IQ_data(k1,1) > 0
-        phi_e(ii) = atan(IQ_data(ii,1)/IQ_data(ii,2));
-    else
-        phi_e(ii) = pi - atan(IQ_data(ii,1)/IQ_data(ii,2));
-    end
-end
-
-figure
-plot(phi_e)
-title('Phase Error Analysis')
+% %% BER Calculation
+% 
+% ber = 0.5*erfc(sqrt((life))); % Bit Error Rate
+% % ber = 0.5*erfc(sqrt(10.^(life/10)));
+% 
+% figure
+% semilogy(life,ber,'b.');
+% hold on
+% % axis([-3 10 10^-5 0.5])
+% grid on
+% xlabel('SNR, dB');
+% ylabel('Bit Error Rate');
+% 
+% if jam_choice == 1
+%     title('Nojamming')
+% elseif jam_choice == 2
+%     title('Gaussian');
+% elseif jam_choice == 3
+%     title('Sine');
+% end
+% 
+% %% Amplitude Error Analysis
+% for i = 1:k1
+%     alpha_e(i) = abs(1-sqrt(IQ_amplitudes(i)));
+% end
+% figure
+% plot(alpha_e)
+% title('Amplitude Error Analysis')
+% 
+% %% Phase Error Analysis
+% 
+% for ii = 1:k1 % length(IQ_data)
+%     if IQ_data(k1,1) > 0
+%         phi_e(ii) = atan(IQ_data(ii,1)/IQ_data(ii,2));
+%     else
+%         phi_e(ii) = pi - atan(IQ_data(ii,1)/IQ_data(ii,2));
+%     end
+% end
+% 
+% figure
+% plot(phi_e)
+% title('Phase Error Analysis')
