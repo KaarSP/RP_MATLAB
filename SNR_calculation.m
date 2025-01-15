@@ -94,25 +94,25 @@ ylabel('SNR (dB)');
 
 % Ensure all values are positive to fit
 shift_value = abs(min(SNR_dB)) + 1; 
-life = SNR_dB + shift_value;
+SNR_shift = SNR_dB + shift_value;
 
 % Distribution fit of SNR
 binWidth = 2;
-lastVal = ceil(max(life));
+lastVal = ceil(max(SNR_shift));
 binEdges = 0:binWidth:lastVal+1;
-h = histogram(life,binEdges);
+h = histogram(SNR_shift,binEdges);
 xlabel('SNR (dB)');
 ylabel('Frequency');
 
-counts = histcounts(life,binEdges);
+counts = histcounts(SNR_shift,binEdges);
 binCtrs = binEdges(1:end-1) + binWidth/2;
 h.FaceColor = [.9 .9 .9];
 hold on
 plot(binCtrs,counts,'o');
 hold off
 
-pd = fitdist(life,'Weibull');
-h = histogram(life,binEdges,'Normalization','pdf','FaceColor',[.9 .9 .9]);
+pd = fitdist(SNR_shift,'Weibull');
+h = histogram(SNR_shift,binEdges,'Normalization','pdf','FaceColor',[.9 .9 .9]);
 xlabel('SNR (dB)');
 ylabel('Probability Density Function');
 xgrid = linspace(0,100,10000)';
@@ -125,6 +125,7 @@ elseif jam_choice == 2
 elseif jam_choice == 3
     title('Sine');
 end
+
 % %% BER Calculation
 % 
 % ber = 0.5*erfc(sqrt((life))); % Bit Error Rate
