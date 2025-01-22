@@ -35,6 +35,14 @@ lag = lag + seqLen - 1;                         % Adjust lag index
 % Extract one repetition of the sequence
 repeatedSequence = normalizedIQ(1:lag);
 
+
+figure;
+plot(autocorrResult)
+
+figure;
+plot(repeatedSequence,'b.')
+title('Sequence after auto-correlation')
+
 % % Step 3: Frequency Synchronization using Costas Loop
 % N = length(repeatedSequence);
 % theta = 0;                  % Initialize phase
@@ -90,6 +98,7 @@ BER = bitErrors / length(referenceBits); % Calculate BER
 disp(['Bit Error Rate (BER) - No Jamming Signal: ', num2str(BER)]);
 toc
 
+% return
 load gauss.mat
 
 % Step 1: Adaptive Gain Control (AGC)
