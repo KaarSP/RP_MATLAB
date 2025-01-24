@@ -26,7 +26,7 @@
 % ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 % POSSIBILITY OF SUCH DAMAGE.
 %
-% Authour: Kaarmukilan
+% Author: Kaarmukilan
 
 tic
 
@@ -34,12 +34,11 @@ clc
 clear
 close all
 
-%% Auto-Correlation
 % Load or initialize the IQ dataset
 load("../w1.mat");
 
 % Select the type of Jamming: (1) No Jamming / (2) Gaussian / (3) Sine
-jam_choice = 1;
+jam_choice = 2;
 if jam_choice == 1
     IQ_data = Nojamming;
 elseif jam_choice == 2
@@ -47,46 +46,42 @@ elseif jam_choice == 2
 elseif jam_choice == 3
     IQ_data = Sine;
 end
-l = 5*(10^5);
-k1 = 5*(10^5);
 
-received_signal = complex(IQ_data(1+k1:l+k1,1),IQ_data(1+k1:l+k1,2));
-% received_signal = complex(IQ_data(:,1),IQ_data(:,2));
+img = 75;  % Number of images to be considered
+k2 = 5*(10^5);
+k1 = img*5*(10^5);
 
-% Given: Received IQ data (received_signal) for BPSK modulation
-% Parameters
-fs = 1e6;               % Sampling frequency (1 Million samples per second)
-fc = 900e6;             % Carrier frequency (900MHz)
-T_s = 1;             % Symbol period (second)
-samples_per_symbol = fs * T_s; % Number of samples per symbol
-N = length(received_signal);
+% received_IQ = complex(IQ_data(1+k1:l+k1,1),IQ_data(1+k1:l+k1,2));
+received_IQ = complex(IQ_data(1:k1,1),IQ_data(1:k1,2));
 
-% Step 1: Downconvert the received signal to the baseband
-t = ((0:N-1)/fs).';
-received_baseband = received_signal .* exp(-1j * 2 * pi * fc * t); 
+% Estimation of the transmitted sequence from No jamming scenario
+transmitSeq = transmitSeqEstimate(complex(Nojamming(1:k2,1),Nojamming(1:k2,2)));
 
-% Step 2: Auto-correlation to determine symbol timing
-[autocorr, lags] = xcorr(abs(received_baseband));     % Auto-correlation of the baseband signal
-[~, peak_idx] = max(autocorr);                      % Find the maximum correlation peak
-symbol_offset = lags(peak_idx);                     % Determine the symbol timing offset
+[autocorr, lags] = xcorr(real(received_IQ),transmitSeq);     % Auto-correlation of the baseband signal
+% Focus on positive lags
+positiveLags = autocorr(length(received_IQ):end,1);
 
-% Step 3: Sampling at symbol boundaries
-% sample_indices = symbol_offset + samples_per_symbol/2:samples_per_symbol:N;
-% sampled_signal = real(received_baseband(sample_indices)); % Sampled IQ data
+[~, locs] = findpeaks(positiveLags, 'MinPeakHeight', max(positiveLags)*0.8);
+sequenceStart = locs(1)-1; % Length of the repeating sequence
 
-sampled_signal = real(received_baseband(symbol_offset+1:end));
-% Step 4: Decision rule to reconstruct transmitted bits
-estimated_bits = sampled_signal > 0; % Threshold decision: >0 for '0', <0 for '1'
+received_dat = received_IQ(sequenceStart+1:end);
+
+len = floor(length(received_dat)/length(transmitSeq));
+
+received_data = received_dat(1:len*length(transmitSeq));
 
 % Step 5: Bit Error Rate (BER) calculation
-received_bits = abs(received_baseband) > 0;
+received_bits = real(received_data) > 0;
+
+transmit_bits = real(transmitSeq) > 0;
+transmit_bits = repmat(transmit_bits,len,1);
 
 % Assuming 'transmitted_bits' and 'estimated_bits' are available
-if length(received_bits) ~= length(estimated_bits)
+if length(received_bits) ~= length(transmit_bits)
     error('Transmitted and estimated bit sequences must have the same length.');
 else
     % Calculate the number of bit errors
-    num_errors = sum(received_bits ~= estimated_bits);
+    num_errors = sum(received_bits ~= transmit_bits);
     
     % Calculate the Bit Error Rate (BER)
     BER = num_errors / length(received_bits);
@@ -95,14 +90,5 @@ else
     disp(['Number of Bit Errors: ', num2str(num_errors)]);
     disp(['Bit Error Rate (BER): ', num2str(BER)]);
 end
-
-[length(estimated_bits) length(received_bits)]
-
-% figure;
-% 
-% stem(estimated_bits, 'filled', 'DisplayName', 'Decoded Bits');
-% title('Decoded Bit Sequence');
-% xlabel('Bit Index');
-% ylabel('Bit Value');
 
 toc
