@@ -1,6 +1,8 @@
 function transmitSeq = transmitSeqEstimate(received_IQ)
     % Compute autocorrelation
     autoCorr = xcorr(real(received_IQ));
+
+    % plot(aut)
     
     % Focus on positive lags
     positiveLags = autoCorr(length(received_IQ):end);

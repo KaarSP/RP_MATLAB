@@ -35,10 +35,10 @@ clear
 close all
 
 % Load or initialize the IQ dataset
-load("../w1.mat");
+load("../dataset/w1.mat");
 
 % Select the type of Jamming: (1) No Jamming / (2) Gaussian / (3) Sine
-jam_choice = 2;
+jam_choice = 1;
 if jam_choice == 1
     IQ_data = Nojamming;
 elseif jam_choice == 2
@@ -61,7 +61,7 @@ transmitSeq = transmitSeqEstimate(complex(Nojamming(1:k2,1),Nojamming(1:k2,2)));
 % Focus on positive lags
 positiveLags = autocorr(length(received_IQ):end,1);
 
-[~, locs] = findpeaks(positiveLags, 'MinPeakHeight', max(positiveLags)*0.8);
+[~, locs] = findpeaks(positiveLags, 'MinPeakHeight', max(positiveLags)*0.9);
 sequenceStart = locs(1)-1; % Length of the repeating sequence
 
 received_dat = received_IQ(sequenceStart+1:end);

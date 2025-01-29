@@ -7,10 +7,15 @@ load nojam.mat
 % Compute autocorrelation
 autoCorr = xcorr(real(received_IQ));
 
+figure
+plot(autoCorr)
+
 % Focus on positive lags
 positiveLags = autoCorr(length(received_IQ):end);
+figure
+plot(positiveLags)
 
-[~, locs] = findpeaks(positiveLags, 'MinPeakHeight', max(positiveLags)*0.8);
+[~, locs] = findpeaks(positiveLags, 'MinPeakHeight', max(positiveLags)*0.9);
 len_RepeatSeq = locs(1)-1; % Length of the repeating sequence
 
 % Extract the repeating sequence
@@ -23,6 +28,7 @@ end
 transmitSeq = mean(repeatSeq, 2); 
 
 k = 500;
+figure;
 plot((repeatSeq(1:k,1)),'c.')
 hold on
 plot((repeatSeq(1:k,2)),'r.')
