@@ -34,10 +34,13 @@ close all
 
 % Load or initialize the IQ dataset
 tic
-fileName = "../dataset/w31.mat";
+fileName = "../dataset/w29.mat";
 [~, fname, ~] = fileparts(fileName);
 load(fileName);
 toc
+
+% Save image: (1) Save image as .jpg / (0) Don't save the image
+img_save = 0; 
 
 tic
 for i = 1:3
@@ -96,10 +99,12 @@ for i = 1:3
     y_pos = y_limits(2) - 0.1 * (y_limits(2) - y_limits(1));
     text(x_pos, y_pos, sprintf('EVM: %.2f%%, %.2f dB', evm_rms, evm_db), 'FontSize', 12, 'Color', 'red');
 
-    folderPath = 'Z:\Kaarmukilan\img\';
-    fileName = sprintf('EVM_%s_%s.jpg', fname,name);
-    fullPath = fullfile(folderPath, fileName);
-    saveas(gcf, fullPath);
+    if img_save == 1
+        folderPath = 'Z:\Kaarmukilan\img\';
+        fileName = sprintf('EVM_%s_%s.jpg', fname,name);
+        fullPath = fullfile(folderPath, fileName);
+        saveas(gcf, fullPath);
+    end
 
 end
 

@@ -73,7 +73,7 @@ plot(positiveLags(1:15000))
 title(sprintf('%s %s', fname, name));
 
 [~, locs] = findpeaks(abs(positiveLags), 'MinPeakHeight', max(positiveLags)*0.7);
-sequenceStart = 1791;%locs(3); % Start of the repeating sequence
+sequenceStart = 4519;%locs(3); % Start of the repeating sequence
 
 received_dat = received_IQ(sequenceStart:end);
 
