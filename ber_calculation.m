@@ -31,15 +31,15 @@
 tic
 
 clc
-clear
+% clear
 close all
 
 % Load or initialize the IQ dataset
-tic
-fileName = "../dataset/w1.mat";
-[~, fname, ~] = fileparts(fileName);
-load(fileName);
-toc
+% tic
+% fileName = "../dataset/w1.mat";
+% [~, fname, ~] = fileparts(fileName);
+% load(fileName);
+% toc
 
 % Select the type of Jamming: (1) No Jamming / (2) Gaussian / (3) Sine
 jam_choice = 2;
@@ -61,8 +61,16 @@ k1 = img*5*(10^5);
 % received_IQ = complex(IQ_data(1+k1:l+k1,1),IQ_data(1+k1:l+k1,2));
 received_IQ = complex(IQ_data(1:k1,1),IQ_data(1:k1,2));
 
+imageSel = 100;             % Selected Image
+samplesPerImage = 5*(10^5); % Samples per image
+
+startIndex = (imageSel - 1) * samplesPerImage + 1;
+endIndex = imageSel * samplesPerImage;
+
+receivedIQ = complex(Nojamming(startIndex:endIndex,1),Nojamming(startIndex:endIndex,2));
+
 % Estimation of the transmitted sequence from No jamming scenario
-transmitSeq = transmitSeqEstimate(complex(Nojamming(1:k2,1),Nojamming(1:k2,2)));
+transmitSeq = transmitSeqEstimate(receivedIQ);
 
 [autocorr, lags] = xcorr(real(received_IQ), transmitSeq);     % Auto-correlation of the baseband signal
 % Focus on positive lags
@@ -72,8 +80,8 @@ figure
 plot(positiveLags(1:15000))
 title(sprintf('%s %s', fname, name));
 
-[~, locs] = findpeaks(abs(positiveLags), 'MinPeakHeight', max(positiveLags)*0.7);
-sequenceStart = 4519;%locs(3); % Start of the repeating sequence
+[~, locs] = findpeaks(abs(positiveLags), 'MinPeakHeight', max(positiveLags)*0.8);
+sequenceStart = 2999;%locs(3); % Start of the repeating sequence
 
 received_dat = received_IQ(sequenceStart:end);
 
