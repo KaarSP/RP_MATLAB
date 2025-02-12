@@ -33,20 +33,20 @@ clear
 close all
 
 % Jamming ID : 4,5,6,7,8
-jamID = 5;
+jamID = 4;
 
-if jamID == 4
-    jamIndex = [1 2 3 7 9 12 13 15 18 19];
-elseif jamID == 5
-    jamIndex = [4 5 6 8 10 11 14 16 17 20];
-elseif jamID == 6
-    jamIndex = 21;
-elseif jamID == 7
-    jamIndex = 22;
-elseif jamID == 8
-    jamIndex = 23;
-end
-
+% if jamID == 4
+%     jamIndex = [1 2 3 7 9 12 13 15 18 19];
+% elseif jamID == 5
+%     jamIndex = [4 5 6 8 10 11 14 16 17 20];
+% elseif jamID == 6
+%     jamIndex = 21;
+% elseif jamID == 7
+%     jamIndex = 22;
+% elseif jamID == 8
+%     jamIndex = 23;
+% end
+jamIndex = 1:23;
 % Jamming Power (W)
 jamPower = [0.1 0.3 0.6 0.1 0.3 0.6 0.2 0.2 0.4 0.4 0.5 0.5 0.7 0.7 0.8 0.8 0.6 0.6 repmat(0.5,1,13)];
 
@@ -72,7 +72,10 @@ hold on;
 plot(jamPower(jamIndex),gauss_dB(jamIndex),'b*');
 hold on;
 plot(jamPower(jamIndex),sine_dB(jamIndex),'g*');
-figName = sprintf('Jamming Power vs EVM - Jammer %d',jamID);
+hold on;
+y_value = -14;  % EVM threshold for -14dB
+yline(y_value, '--k', 'LineWidth', 1.5);  
+figName = sprintf('Jamming Power vs EVM');
 title(figName)
 xlabel('Jamming Power (W)')
 ylabel('EVM (dB)')
@@ -84,6 +87,8 @@ hold on;
 plot(jamDistance(24:31),gauss_dB(24:31),'b*');
 hold on;
 plot(jamDistance(24:31),sine_dB(24:31),'g*');
+hold on;
+yline(y_value, '--k', 'LineWidth', 1.5);  
 title('Jamming Distance vs EVM')
 xlabel('Jamming Distance (m)')
 ylabel('EVM (dB)')

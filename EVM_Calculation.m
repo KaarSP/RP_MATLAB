@@ -77,12 +77,12 @@ for ii = 1:numDataset
     
         receivedIQ = complex(iqData(startIndex:endIndex,1),iqData(startIndex:endIndex,2));
         
-        if jam_choice == 1
-            min_threshold = min(abs(receivedIQ));
-            max_threshold = max(abs(receivedIQ));
-        end
+        % if jam_choice == 1
+        %     min_threshold = min(abs(receivedIQ));
+        %     max_threshold = max(abs(receivedIQ));
+        % end
 
-        receivedIQ = receivedIQ(abs(receivedIQ) >= min_threshold & abs(receivedIQ) <= max_threshold);
+        % receivedIQ = receivedIQ(abs(receivedIQ) >= min_threshold & abs(receivedIQ) <= max_threshold);
 
         % Removing if there are any zeros
         receivedIQ = receivedIQ(real(receivedIQ) ~= 0);

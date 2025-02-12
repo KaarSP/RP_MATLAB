@@ -1,6 +1,6 @@
 function transmitSeq = transmitSeqEstimate(received_IQ)
     % Compute autocorrelation
-    autoCorr = xcorr(real(received_IQ));
+    autoCorr = xcorr(real(received_IQ),real(received_IQ));
 
     % plot(aut)
     

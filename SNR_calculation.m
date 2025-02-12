@@ -37,7 +37,7 @@ SNR_matrix = zeros(23,4);
 SNR_matrix(1:23,1) = 1:23;
 
 
-for ii = 1:23
+for ii = 15
     tic
     % Load or initialize the IQ dataset
     fileName = sprintf("../dataset/w%d.mat",ii);
@@ -164,6 +164,6 @@ for ii = 1:23
     toc
 end
 
-save SNR_values.mat SNR_matrix
+% save SNR_values.mat SNR_matrix
 
-close all;
+% close all;

@@ -35,11 +35,11 @@ clc
 close all
 
 % Load or initialize the IQ dataset
-% tic
-% fileName = "../dataset/w1.mat";
-% [~, fname, ~] = fileparts(fileName);
-% load(fileName);
-% toc
+tic
+fileName = "../dataset/w1.mat";
+[~, fname, ~] = fileparts(fileName);
+load(fileName);
+toc
 
 % Select the type of Jamming: (1) No Jamming / (2) Gaussian / (3) Sine
 jam_choice = 2;
@@ -80,8 +80,8 @@ figure
 plot(positiveLags(1:15000))
 title(sprintf('%s %s', fname, name));
 
-[~, locs] = findpeaks(abs(positiveLags), 'MinPeakHeight', max(positiveLags)*0.8);
-sequenceStart = 2999;%locs(3); % Start of the repeating sequence
+[~, locs] = findpeaks(abs(positiveLags), 'MinPeakHeight', max(positiveLags)*0.8, 'MinPeakDistance', 2048/2);
+sequenceStart = locs(2); % Start of the repeating sequence
 
 received_dat = received_IQ(sequenceStart:end);
 
