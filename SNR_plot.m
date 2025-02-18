@@ -33,7 +33,7 @@ clc;
 clear;
 close all;
 
-load SNR_values.mat
+load SNR_values_11Jan.mat
 
 noJam_SNR = SNR_matrix(1:18,2);
 gauss_SNR = SNR_matrix(1:18,3);

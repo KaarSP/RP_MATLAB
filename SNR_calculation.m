@@ -33,18 +33,20 @@ clc;
 clear;
 close all;
 
-SNR_matrix = zeros(23,4);
-SNR_matrix(1:23,1) = 1:23;
+numDataset = 1; % Total number of dataset
 
+% Initialization
+SNR_matrix = zeros(numDataset,4);
+SNR_matrix(1:numDataset,1) = 1:numDataset;
 
-for ii = 15
+for ii = 1:numDataset
     tic
     % Load or initialize the IQ dataset
     fileName = sprintf("../dataset/w%d.mat",ii);
     [~, fname, ~] = fileparts(fileName);
-    sprintf("Dataset: %s", fname)
+    fprintf("Dataset: %s\n", fname)
     load(fileName);
-    
+    fprintf('Dataset Loaded\n')
     for i = 1:3
     
         % Select the type of Jamming: (1) No Jamming / (2) Gaussian / (3) Sine
@@ -56,23 +58,33 @@ for ii = 15
             name = 'Gauss';
             IQ_data = Gaussian;
         elseif jam_choice == 3
-            name = 'Sin';
+            name = 'Sine ';
             IQ_data = Sine;
         end
         
-        % Parameters
-        num_samples = size(IQ_data,1);  % Total number of samples
-        window_size = 10;               % Window size for the calculation of Standard Deviation
-        
-        img = 220;  % Number of images to be considered
-        k2 = 5*(10^5);
-        k1 = img*5*(10^5);
-        
-        % received_IQ = complex(IQ_data(1:k1,1),IQ_data(1:k1,2));
-        
+        % Parameters        
+        window_size = 10;               % Window size for the calculation of Standard Deviation        
+        samplesPerImage = 5*(10^5);     % Number of samples per image
+
+        % Index range for images
+        imageStart = 2;     % Starting image index
+        imageEnd   = 100;   % Ending image index
+
+        % Calculate the start and end sample indices
+        startIndex = (imageStart - 1) * samplesPerImage + 1;
+        endIndex = imageEnd * samplesPerImage;
+
+        % IQ data for the selected Images
+        iqData = IQ_data(startIndex:endIndex,:);
+
+        num_samples = size(iqData,1);  % Total number of samples
+
         % Calculate amplitude of each IQ pair
-        IQ_amplitude = IQ_data(1:k1,1).^2 + IQ_data(1:k1,2).^2;
+        IQ_amplitude = iqData(:,1).^2 + iqData(:,2).^2;
         
+        % % Calculate amplitude of each IQ pair
+        % IQ_amplitude = IQ_data(startIndex:endIndex,1).^2 + IQ_data(startIndex:endIndex,2).^2;
+
         % Removing zeros in the amplitude
         IQ_amplitudes = IQ_amplitude(IQ_amplitude ~= 0);
         
@@ -89,12 +101,12 @@ for ii = 15
             window_end   = k * window_size;
             window_data  = IQ_amplitudes(window_start:window_end);
         
-            mean_amp     = mean(window_data);            % Mean 
-            squ_dev      = (window_data - mean_amp).^2;  % Sqaured Deviation 
-            expectation  = mean(squ_dev);                % Expectation
-            std_dev      = sqrt(expectation);            % Standard Deviation
-             
-            N_dBM        = 30 + 10*log10(std_dev);       % Noise Power
+            mean_amp     = mean(window_data);                   % Mean 
+            squ_dev      = (sqrt(window_data) - mean_amp).^2;   % Squared Deviation 
+            expectation  = mean(squ_dev);                       % Expectation
+            std_dev      = sqrt(expectation);                   % Standard Deviation
+                    
+            N_dBM        = 30 + 10*log10(std_dev);              % Noise Power
              
             power_dBm    = [power_dBm; N_dBM];   
         end
@@ -148,10 +160,10 @@ for ii = 15
         
         % Find the max SNR value
         [maxValue, index] = max(pdfEst);
-        SNR_window = pd.InputData.data(index:index+9);
+        SNR_window = pd.InputData.data(index:index+(window_size - 1));
         SNR_max = mean(SNR_window);
 
-        sprintf('%s: SNR(max): %.2f dB',name, SNR_max)
+        fprintf('%s: SNR(max): %.2f dB\n',name, SNR_max)
     
         x_limits = xlim();
         y_limits = ylim();
@@ -164,6 +176,6 @@ for ii = 15
     toc
 end
 
-% save SNR_values.mat SNR_matrix
+save SNR_values.mat SNR_matrix
 
-% close all;
+close all;

@@ -32,64 +32,60 @@ clc
 clear
 close all
 
-% Jamming ID : 4,5,6,7,8
-jamID = 4;
+% Parameters
+jamIndex1 = 1:23;  % Constant Jamming Distance
+jamIndex2 = 24:31; % Constant Jamming Power
 
-% if jamID == 4
-%     jamIndex = [1 2 3 7 9 12 13 15 18 19];
-% elseif jamID == 5
-%     jamIndex = [4 5 6 8 10 11 14 16 17 20];
-% elseif jamID == 6
-%     jamIndex = 21;
-% elseif jamID == 7
-%     jamIndex = 22;
-% elseif jamID == 8
-%     jamIndex = 23;
-% end
-jamIndex = 1:23;
 % Jamming Power (W)
 jamPower = [0.1 0.3 0.6 0.1 0.3 0.6 0.2 0.2 0.4 0.4 0.5 0.5 0.7 0.7 0.8 0.8 0.6 0.6 repmat(0.5,1,13)];
 
 % Jammind Distance (m)
 jamDistance = [repmat(10,1,23) 3 5 7 10 13 16 19 21];
 
-load EVM_dB_values.mat 
-load EVM_rms_values.mat
+% Load the calculated EVM values
 
 % dB values
+load EVM_dB_values.mat 
+
 noJam_dB = EVM_dB_matrix(:,2);
 gauss_dB = EVM_dB_matrix(:,3);
 sine_dB  = EVM_dB_matrix(:,4);
 
-% percentage values
-noJam_rms = EVM_rms_matrix(:,2);
-gauss_rms = EVM_rms_matrix(:,3);
-sine_rms  = EVM_rms_matrix(:,4);
+% % percentage values
+% load EVM_rms_values.mat
+% 
+% noJam_rms = EVM_rms_matrix(:,2);
+% gauss_rms = EVM_rms_matrix(:,3);
+% sine_rms  = EVM_rms_matrix(:,4);
+
+% Plot
+y_value = -14.68;  % EVM threshold for -14.68dB
 
 figure;
-plot(jamPower(jamIndex),noJam_dB(jamIndex),'r*');
+plot(jamPower(jamIndex1),noJam_dB(jamIndex1),'*');
 hold on;
-plot(jamPower(jamIndex),gauss_dB(jamIndex),'b*');
+plot(jamPower(jamIndex1),gauss_dB(jamIndex1),'m*');
 hold on;
-plot(jamPower(jamIndex),sine_dB(jamIndex),'g*');
+plot(jamPower(jamIndex1),sine_dB(jamIndex1),'g*');
 hold on;
-y_value = -14;  % EVM threshold for -14dB
-yline(y_value, '--k', 'LineWidth', 1.5);  
-figName = sprintf('Jamming Power vs EVM');
+yline(y_value, '--r', 'LineWidth', 1.5);  
+text(max(jamPower)-0.125, y_value, [num2str(y_value),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+figName = sprintf('Jamming Power vs EVM (Constant Jamming Distance: 10m)');
 title(figName)
 xlabel('Jamming Power (W)')
 ylabel('EVM (dB)')
 legend({'No Jam','Gauss','Sine'},'Location','northwest');
 
 figure;
-plot(jamDistance(24:31),noJam_dB(24:31),'r*');
+plot(jamDistance(jamIndex2),noJam_dB(jamIndex2),'*');
 hold on;
-plot(jamDistance(24:31),gauss_dB(24:31),'b*');
+plot(jamDistance(jamIndex2),gauss_dB(jamIndex2),'m*');
 hold on;
-plot(jamDistance(24:31),sine_dB(24:31),'g*');
+plot(jamDistance(jamIndex2),sine_dB(jamIndex2),'g*');
 hold on;
-yline(y_value, '--k', 'LineWidth', 1.5);  
-title('Jamming Distance vs EVM')
+yline(y_value, '--r', 'LineWidth', 1.5);  
+text(max(jamDistance)-2, y_value, [num2str(y_value),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+title('Jamming Distance vs EVM (Constant Jamming Power: 0.5W)')
 xlabel('Jamming Distance (m)')
 ylabel('EVM (dB)')
 legend({'No Jam','Gauss','Sine'},'Location','northwest');

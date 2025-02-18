@@ -34,6 +34,7 @@ close all
 
 numDataset = 31; % Total number of dataset
 
+% Initialization
 EVM_dB_matrix = zeros(numDataset,4);
 EVM_dB_matrix(1:numDataset,1) = 1:numDataset;
 
@@ -77,13 +78,6 @@ for ii = 1:numDataset
     
         receivedIQ = complex(iqData(startIndex:endIndex,1),iqData(startIndex:endIndex,2));
         
-        % if jam_choice == 1
-        %     min_threshold = min(abs(receivedIQ));
-        %     max_threshold = max(abs(receivedIQ));
-        % end
-
-        % receivedIQ = receivedIQ(abs(receivedIQ) >= min_threshold & abs(receivedIQ) <= max_threshold);
-
         % Removing if there are any zeros
         receivedIQ = receivedIQ(real(receivedIQ) ~= 0);
         
