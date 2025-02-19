@@ -3,14 +3,14 @@ clc
 close all
 
 % Load or initialize the IQ dataset
-% tic
-% fileName = "../dataset/w1.mat";
-% [~, fname, ~] = fileparts(fileName);
-% load(fileName);
-% toc
+tic
+fileName = "../dataset/w1.mat";
+[~, fname, ~] = fileparts(fileName);
+load(fileName);
+toc
 
 % Select the type of Jamming: (1) No Jamming / (2) Gaussian / (3) Sine
-jam_choice = 2;
+jam_choice = 1;
 if jam_choice == 1
     name = 'NoJam';
     IQ_data = Nojamming;

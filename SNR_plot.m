@@ -33,23 +33,68 @@ clc;
 clear;
 close all;
 
-load SNR_values_11Jan.mat
-
-noJam_SNR = SNR_matrix(1:18,2);
-gauss_SNR = SNR_matrix(1:18,3);
-sine_SNR  = SNR_matrix(1:18,4);
+% Parameters
+jamIndex1 = 1:23;  % Constant Jamming Distance
+jamIndex2 = 24:31; % Constant Jamming Power
 
 % Jamming Power (W)
-jamPower = [0.1 0.3 0.6 0.1 0.3 0.6 0.2 0.2 0.4 0.4 0.5 0.5 0.7 0.7 0.8 0.8 0.6 0.6];
+jamPower = [0.1 0.3 0.6 0.1 0.3 0.6 0.2 0.2 0.4 0.4 0.5 0.5 0.7 0.7 0.8 0.8 0.6 0.6 repmat(0.5,1,13)];
+
+% Jammind Distance (m)
+jamDistance = [repmat(10,1,23) 3 5 7 10 13 16 19 21];
+
+load SNR_values.mat
+
+noJam_SNR = SNR_matrix(:,2);
+gauss_SNR = SNR_matrix(:,3);
+sine_SNR  = SNR_matrix(:,4);
+
+% Plot 
+y_value = 26.4;  % EVM threshold for -14.68dB
 
 figure;
-plot(jamPower,noJam_SNR,'r*');
+plot(jamPower(jamIndex1),noJam_SNR(jamIndex1),'*');
 hold on;
-plot(jamPower,gauss_SNR,'b*');
+plot(jamPower(jamIndex1),gauss_SNR(jamIndex1),'m*');
 hold on;
-plot(jamPower,sine_SNR,'g*');
-figName = sprintf('Jamming Power vs SNR');
+plot(jamPower(jamIndex1),sine_SNR(jamIndex1),'g*');
+yline(y_value, '--r', 'LineWidth', 1.5);  
+text(max(jamPower)-0.125, y_value, [num2str(y_value),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+figName = sprintf('Jamming Power vs SNR (Constant Jamming Distance: 10m)');
 title(figName)
 xlabel('Jamming Power (W)')
 ylabel('SNR (dB)')
 legend({'No Jam','Gauss','Sine'},'Location','southwest');
+
+figure;
+plot(jamDistance(jamIndex2),noJam_SNR(jamIndex2),'*');
+hold on;
+plot(jamDistance(jamIndex2),gauss_SNR(jamIndex2),'m*');
+hold on;
+plot(jamDistance(jamIndex2),sine_SNR(jamIndex2),'g*');
+yline(y_value, '--r', 'LineWidth', 1.5);  
+text(max(jamDistance)-2, y_value, [num2str(y_value),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+figName = sprintf('Jamming Distance vs SNR (Constant Jamming Power: 0.5W)');
+title(figName)
+xlabel('Jamming Distance (m)')
+ylabel('SNR (dB)')
+legend({'No Jam','Gauss','Sine'},'Location','northeast');	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+    

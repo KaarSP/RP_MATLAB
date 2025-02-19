@@ -33,13 +33,13 @@ clc;
 clear;
 close all;
 
-numDataset = 1; % Total number of dataset
+numDataset = 31; % Total number of dataset
 
 % Initialization
 SNR_matrix = zeros(numDataset,4);
 SNR_matrix(1:numDataset,1) = 1:numDataset;
 
-for ii = 1:numDataset
+for ii = 1%1:numDataset
     tic
     % Load or initialize the IQ dataset
     fileName = sprintf("../dataset/w%d.mat",ii);
@@ -67,8 +67,8 @@ for ii = 1:numDataset
         samplesPerImage = 5*(10^5);     % Number of samples per image
 
         % Index range for images
-        imageStart = 2;     % Starting image index
-        imageEnd   = 100;   % Ending image index
+        imageStart = 1;     % Starting image index
+        imageEnd   = 1;   % Ending image index
 
         % Calculate the start and end sample indices
         startIndex = (imageStart - 1) * samplesPerImage + 1;
@@ -77,105 +77,56 @@ for ii = 1:numDataset
         % IQ data for the selected Images
         iqData = IQ_data(startIndex:endIndex,:);
 
-        num_samples = size(iqData,1);  % Total number of samples
-
         % Calculate amplitude of each IQ pair
-        IQ_amplitude = iqData(:,1).^2 + iqData(:,2).^2;
+        power_signal  = iqData(:,1).^2 + iqData(:,2).^2;
         
-        % % Calculate amplitude of each IQ pair
-        % IQ_amplitude = IQ_data(startIndex:endIndex,1).^2 + IQ_data(startIndex:endIndex,2).^2;
-
         % Removing zeros in the amplitude
-        IQ_amplitudes = IQ_amplitude(IQ_amplitude ~= 0);
+        power_signal = power_signal(power_signal ~= 0);
         
         % Recceived Signal Strength (RSS)
-        rss_dBm = 30 + 10*log10(IQ_amplitudes); % RSS in dBm
+        P_rx_dBm = 30 + 10*log10(power_signal);
         
-        % Power associated with the Noise - Calculation
-        power_dBm = [];
-        val = 50000;
-        for k = 1 : val%floor(num_samples/window_size)
-            
-            % Get the current window - 10 samples
-            window_start = (k - 1) * window_size + 1;
-            window_end   = k * window_size;
-            window_data  = IQ_amplitudes(window_start:window_end);
-        
-            mean_amp     = mean(window_data);                   % Mean 
-            squ_dev      = (sqrt(window_data) - mean_amp).^2;   % Squared Deviation 
-            expectation  = mean(squ_dev);                       % Expectation
-            std_dev      = sqrt(expectation);                   % Standard Deviation
-                    
-            N_dBM        = 30 + 10*log10(std_dev);              % Noise Power
-             
-            power_dBm    = [power_dBm; N_dBM];   
-        end
-        
-        % Repeat the Noise Power elementwise for window size
-        power_dBm = repelem(power_dBm, window_size);
-        
-        % Signal-to-Noise (SNR) Calculation
-        SNR_dB = rss_dBm(1:val*window_size) - power_dBm;
-        
-        % SNR - Plot
-        figure;
-        plot(SNR_dB);
-        title('Signal-to-Noise Ratio (dB)');
-        xlabel('Number of Samples');
-        ylabel('SNR (dB)');
-        
-        % Ensure all values are positive to fit
-        shift_value = abs(min(SNR_dB)) + 1; 
-        SNR_shift = SNR_dB + shift_value;
-        
-        % Distribution fit of SNR
-        binWidth = 2;
-        lastVal = ceil(max(SNR_shift));
-        binEdges = 0:binWidth:lastVal+1;
-        h = histogram(SNR_shift,binEdges);
-        xlabel('SNR (dB)');
-        ylabel('Frequency');
-        
-        counts = histcounts(SNR_shift,binEdges);
-        binCtrs = binEdges(1:end-1) + binWidth/2;
-        h.FaceColor = [.9 .9 .9];
-        hold on
-        plot(binCtrs,counts,'o');
-        hold off
-        
-        pd = fitdist(SNR_shift,'Weibull');
-        h = histogram(SNR_shift,binEdges,'Normalization','pdf','FaceColor',[.9 .9 .9]);
-        xlabel('SNR (dB)');
-        ylabel('Probability Density Function');
-        xgrid = linspace(0,100,10000)';
-        pdfEst = pdf(pd,xgrid);
-        line(xgrid,pdfEst)
-        if jam_choice == 1
-            title('Nojamming')
-        elseif jam_choice == 2
-            title('Gaussian');
-        elseif jam_choice == 3
-            title('Sine');
-        end
-        
-        % Find the max SNR value
-        [maxValue, index] = max(pdfEst);
-        SNR_window = pd.InputData.data(index:index+(window_size - 1));
-        SNR_max = mean(SNR_window);
+        num_samples = length(iqData);
+        noise_power = zeros(num_samples - window_size + 1, 1);
 
-        fprintf('%s: SNR(max): %.2f dB\n',name, SNR_max)
-    
-        x_limits = xlim();
-        y_limits = ylim();
-        x_pos = x_limits(1) + 0.005 * (x_limits(2) - x_limits(1));
-        y_pos = y_limits(2) - 0.035 * (y_limits(2) - y_limits(1));
-        text(x_pos, y_pos, sprintf('SNR(max): %.2f dB', SNR_max), 'FontSize', 12, 'Color', 'red');
+        for j = 1:(num_samples - window_size + 1)
+            
+            % Extract windowed samples
+            I_win = iqData(j:j+window_size-1,1);
+            Q_win = iqData(j:j+window_size-1,2);
+            
+            % Compute mean of amplitude
+            amp = sqrt(I_win.^2 + Q_win.^2);
+            mu = mean(amp);
+            
+            % Compute standard deviation (noise power)
+            noise_power(j) = mean((amp - mu).^2);
+        end
         
-        SNR_matrix(ii,i+1) = SNR_max; 
+        N_dBm = 30 + 10*log10(noise_power);
+        
+        SNR_dB = P_rx_dBm(1:length(N_dBm)) - N_dBm;
+
+        % % Plot results
+        % figure;
+        % plot(SNR_dB);
+        % xlabel('Sample Index');
+        % ylabel('SNR (dB)');
+        % title('Estimated SNR from Received IQ Data');
+        % grid on;
+
+        fprintf('%s: SNR(max): %.2f dB\n',name, mean(SNR_dB))
+    
+        SNR_matrix(ii,i+1) = mean(SNR_dB); 
+
+        % x_limits = xlim();
+        % y_limits = ylim();
+        % x_pos = x_limits(1) + 0.005 * (x_limits(2) - x_limits(1));
+        % y_pos = y_limits(2) - 0.035 * (y_limits(2) - y_limits(1));
+        % text(x_pos, y_pos, sprintf('SNR(max): %.2f dB', num2str(mean(SNR_dB))), 'FontSize', 12, 'Color', 'red');
+
     end
     toc
 end
 
-save SNR_values.mat SNR_matrix
-
-close all;
+% save SNR_values.mat SNR_matrix

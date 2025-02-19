@@ -54,24 +54,25 @@ elseif jam_choice == 3
     IQ_data = Sine;
 end
 
-% img = 75;  % Number of images to be considered
-% k2 = 5*(10^5);
-% k1 = img*5*(10^5);
-% 
-% received_IQ = complex(IQ_data(1:k1,1),IQ_data(1:k1,2));
+img = 75;  % Number of images to be considered
+k2 = 5*(10^5);
+k1 = img*5*(10^5);
+
+% received_IQ = complex(IQ_data(1+k1:l+k1,1),IQ_data(1+k1:l+k1,2));
+received_IQ = complex(IQ_data(1:k1,1),IQ_data(1:k1,2));
 
 imageSel = 100;             % Selected Image
 samplesPerImage = 5*(10^5); % Samples per image
 
 startIndex = (imageSel - 1) * samplesPerImage + 1;
-endIndex = startIndex + 2047;
+endIndex = imageSel * samplesPerImage;
 
 receivedIQ = complex(Nojamming(startIndex:endIndex,1),Nojamming(startIndex:endIndex,2));
 
 % Estimation of the transmitted sequence from No jamming scenario
 transmitSeq = transmitSeqEstimate(receivedIQ);
 
-[autocorr, lags] = xcorr(real(receivedIQ));     % Auto-correlation of the baseband signal
+[autocorr, lags] = xcorr(real(received_IQ), transmitSeq);     % Auto-correlation of the baseband signal
 % Focus on positive lags
 positiveLags = autocorr(length(received_IQ):end,1);
 
