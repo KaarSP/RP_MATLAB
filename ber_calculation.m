@@ -54,12 +54,6 @@ elseif jam_choice == 3
     IQ_data = Sine;
 end
 
-% img = 75;  % Number of images to be considered
-% k2 = 5*(10^5);
-% k1 = img*5*(10^5);
-% 
-% received_IQ = complex(IQ_data(1:k1,1),IQ_data(1:k1,2));
-
 imageSel = 100;             % Selected Image
 samplesPerImage = 5*(10^5); % Samples per image
 

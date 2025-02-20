@@ -39,14 +39,19 @@ numDataset = 31; % Total number of dataset
 SNR_matrix = zeros(numDataset,4);
 SNR_matrix(1:numDataset,1) = 1:numDataset;
 
-for ii = 1%1:numDataset
+% Plot image: (1) Plot SNR / (0) Don't plot SNR
+imgPlot = 0; 
+
+for ii = 1:numDataset
     tic
+
     % Load or initialize the IQ dataset
     fileName = sprintf("../dataset/w%d.mat",ii);
     [~, fname, ~] = fileparts(fileName);
     fprintf("Dataset: %s\n", fname)
     load(fileName);
     fprintf('Dataset Loaded\n')
+
     for i = 1:3
     
         % Select the type of Jamming: (1) No Jamming / (2) Gaussian / (3) Sine
@@ -64,21 +69,18 @@ for ii = 1%1:numDataset
         
         % Parameters        
         window_size = 10;               % Window size for the calculation of Standard Deviation        
-        samplesPerImage = 5*(10^5);     % Number of samples per image
-
-        % Index range for images
-        imageStart = 1;     % Starting image index
-        imageEnd   = 1;   % Ending image index
-
-        % Calculate the start and end sample indices
-        startIndex = (imageStart - 1) * samplesPerImage + 1;
-        endIndex = imageEnd * samplesPerImage;
+        
+        imageSel = 100;                 % Selected Image
+        samplesPerImage = 5*(10^5);     % Samples per image
+        
+        startIndex = (imageSel - 1) * samplesPerImage + 1;  % Start Index     
+        endIndex   = imageSel * samplesPerImage;            % End Index
 
         % IQ data for the selected Images
         iqData = IQ_data(startIndex:endIndex,:);
 
         % Calculate amplitude of each IQ pair
-        power_signal  = iqData(:,1).^2 + iqData(:,2).^2;
+        power_signal = iqData(:,1).^2 + iqData(:,2).^2;
         
         % Removing zeros in the amplitude
         power_signal = power_signal(power_signal ~= 0);
@@ -97,36 +99,37 @@ for ii = 1%1:numDataset
             
             % Compute mean of amplitude
             amp = sqrt(I_win.^2 + Q_win.^2);
-            mu = mean(amp);
+            mu  = mean(amp);
             
             % Compute standard deviation (noise power)
             noise_power(j) = mean((amp - mu).^2);
         end
         
-        N_dBm = 30 + 10*log10(noise_power);
-        
-        SNR_dB = P_rx_dBm(1:length(N_dBm)) - N_dBm;
-
-        % % Plot results
-        % figure;
-        % plot(SNR_dB);
-        % xlabel('Sample Index');
-        % ylabel('SNR (dB)');
-        % title('Estimated SNR from Received IQ Data');
-        % grid on;
+        N_dBm  = 30 + 10*log10(noise_power);
+        SNR_dB = P_rx_dBm(1:length(N_dBm)) - N_dBm;     % SNR in dB
 
         fprintf('%s: SNR(max): %.2f dB\n',name, mean(SNR_dB))
     
-        SNR_matrix(ii,i+1) = mean(SNR_dB); 
+        SNR_matrix(ii,i+1) = mean(SNR_dB);  % Store SNR in a matrix
 
-        % x_limits = xlim();
-        % y_limits = ylim();
-        % x_pos = x_limits(1) + 0.005 * (x_limits(2) - x_limits(1));
-        % y_pos = y_limits(2) - 0.035 * (y_limits(2) - y_limits(1));
-        % text(x_pos, y_pos, sprintf('SNR(max): %.2f dB', num2str(mean(SNR_dB))), 'FontSize', 12, 'Color', 'red');
+        % Plot results
+        if imgPlot == 1
+            figure;
+            plot(SNR_dB);
+            xlabel('Sample Index');
+            ylabel('SNR (dB)');
+            title('Estimated SNR from Received IQ Data');
+            grid on;
 
+            x_limits = xlim();
+            y_limits = ylim();
+            x_pos = x_limits(1) + 0.005 * (x_limits(2) - x_limits(1));
+            y_pos = y_limits(2) - 0.035 * (y_limits(2) - y_limits(1));
+            text(x_pos, y_pos, sprintf('SNR(max): %.2f dB', num2str(mean(SNR_dB))), 'FontSize', 12, 'Color', 'red');
+        end
     end
     toc
 end
 
-% save SNR_values.mat SNR_matrix
+% Save computed SNR as .mat file
+save SNR_values.mat SNR_matrix
