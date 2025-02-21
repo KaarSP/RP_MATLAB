@@ -35,7 +35,7 @@ clear
 % clearvars -except Nojamming Gaussian Sine;
 close all
 
-numDataset = 23; % Total number of dataset
+numDataset = 31; % Total number of dataset
 
 % Initialization
 BER_matrix = zeros(numDataset,4);
@@ -52,11 +52,14 @@ for ii = 1:numDataset
     fprintf("Dataset: %s\n", fname)
     load(fileName);
     
-    for i = 2:3
+    for i = 1:3
 
         % Select the type of Jamming: (2) Gaussian / (3) Sine
         jam_choice = i;
-        if jam_choice == 2
+        if jam_choice == 1
+            name = 'NoJam';
+            iqData = Nojamming;
+        elseif jam_choice == 2
             name = 'Gauss';
             iqData = Gaussian;
         elseif jam_choice == 3
@@ -115,23 +118,24 @@ for ii = 1:numDataset
         end
 
         % Condition to check if peak is negative
+        mod_values = [0:7, 2039:2047];
         if length(maxLocs) > 1
-            diff1 = diff(maxLocs(1:end-2));
-            if isempty(diff1)
+            diff1 = diff(maxLocs(1:end-3));
+            if isempty(diff1) || length(diff1) < 1
                 diff_max = 0;
             else
-                diff_max = all(diff1 == 2048);
+                diff_max = all(ismember(mod(diff1,2048),mod_values));
             end
         else
             diff_max = 0;
         end
 
         if length(minLocs) > 1
-            diff2 = diff(minLocs(1:end-2));
-            if isempty(diff2)
+            diff2 = diff(minLocs(1:end-3));
+            if isempty(diff2) || length(diff2) < 1
                 diff_min = 0;
             else
-                diff_min = all(diff2 == 2048);
+                diff_min = all(ismember(mod(diff2,2048),mod_values));
             end
              
         else

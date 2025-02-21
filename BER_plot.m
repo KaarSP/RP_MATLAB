@@ -51,43 +51,32 @@ noJam_ber = BER_matrix(:,2);
 gauss_ber = BER_matrix(:,3);
 sine_ber  = BER_matrix(:,4);
 
-% % percentage values
-% load EVM_rms_values.mat
-% 
-% noJam_rms = EVM_rms_matrix(:,2);
-% gauss_rms = EVM_rms_matrix(:,3);
-% sine_rms  = EVM_rms_matrix(:,4);
-
 % Plot
 % y_value1 = -14.93;  % EVM threshold for constant Jamming Distance 
 % y_value2 = -14.7;   % EVM threshold for constant Relative Jamming Power
 
 figure;
-% plot(jamPower(jamIndex1),noJam_dB(jamIndex1),'*');
-% hold on;
 plot(jamPower(jamIndex1),gauss_ber(jamIndex1),'m*');
 hold on;
 plot(jamPower(jamIndex1),sine_ber(jamIndex1),'g*');
 hold on;
 % yline(y_value1, '--r', 'LineWidth', 1.5);  
 % text(max(jamPower)-0.125, y_value1, [num2str(y_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
-figName = sprintf('Relative Jamming Power vs EVM (Constant Jamming Distance: 10m)');
+figName = sprintf('Relative Jamming Power vs BER (Constant Jamming Distance: 10m)');
 title(figName)
 xlabel('Relative Jamming Power (W)')
-ylabel('EVM (dB)')
+ylabel('BER')
 legend({'Gauss','Sine'},'Location','northwest');
 
-% figure;
-% plot(jamDistance(jamIndex2),noJam_dB(jamIndex2),'*');
-% hold on;
-% plot(jamDistance(jamIndex2),gauss_dB(jamIndex2),'m*');
-% hold on;
-% plot(jamDistance(jamIndex2),sine_dB(jamIndex2),'g*');
-% hold on;
-% xticks([1:2:21 22]);
+figure;
+plot(jamDistance(jamIndex2),gauss_ber(jamIndex2),'m*');
+hold on;
+plot(jamDistance(jamIndex2),sine_ber(jamIndex2),'g*');
+hold on;
+xticks([1:2:21 22]);
 % yline(y_value2, '--r', 'LineWidth', 1.5);  
 % text(max(jamDistance)-2, y_value2, [num2str(y_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
-% title('Jamming Distance vs EVM (Constant Relative Jamming Power: 0.5W)')
-% xlabel('Jamming Distance (m)')
-% ylabel('EVM (dB)')
-% legend({'No Jam','Gauss','Sine'},'Location','northwest');
+title('Jamming Distance vs BER (Constant Relative Jamming Power: 0.5W)')
+xlabel('Jamming Distance (m)')
+ylabel('BER')
+legend({'Gauss','Sine'},'Location','northwest');
