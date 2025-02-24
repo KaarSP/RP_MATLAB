@@ -52,31 +52,35 @@ gauss_ber = BER_matrix(:,3);
 sine_ber  = BER_matrix(:,4);
 
 % Plot
-% y_value1 = -14.93;  % EVM threshold for constant Jamming Distance 
-% y_value2 = -14.7;   % EVM threshold for constant Relative Jamming Power
+y_value1 = 0.009;  % EVM threshold for constant Jamming Distance 
+y_value2 = 0.009;   % EVM threshold for constant Relative Jamming Power
 
 figure;
+plot(jamPower(jamIndex1),noJam_ber(jamIndex1),'*');
+hold on;
 plot(jamPower(jamIndex1),gauss_ber(jamIndex1),'m*');
 hold on;
 plot(jamPower(jamIndex1),sine_ber(jamIndex1),'g*');
 hold on;
-% yline(y_value1, '--r', 'LineWidth', 1.5);  
-% text(max(jamPower)-0.125, y_value1, [num2str(y_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y_value1, '--r', 'LineWidth', 1.5);  
+text(max(jamPower)-0.125, y_value1, [num2str(y_value1)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 figName = sprintf('Relative Jamming Power vs BER (Constant Jamming Distance: 10m)');
 title(figName)
 xlabel('Relative Jamming Power (W)')
 ylabel('BER')
-legend({'Gauss','Sine'},'Location','northwest');
+legend({'NoJam', 'Gauss','Sine'},'Location','northwest');
 
 figure;
+plot(jamDistance(jamIndex2),noJam_ber(jamIndex2),'*');
+hold on;
 plot(jamDistance(jamIndex2),gauss_ber(jamIndex2),'m*');
 hold on;
 plot(jamDistance(jamIndex2),sine_ber(jamIndex2),'g*');
 hold on;
 xticks([1:2:21 22]);
-% yline(y_value2, '--r', 'LineWidth', 1.5);  
-% text(max(jamDistance)-2, y_value2, [num2str(y_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y_value2, '--r', 'LineWidth', 1.5);  
+text(max(jamDistance)-2, y_value2, [num2str(y_value2)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 title('Jamming Distance vs BER (Constant Relative Jamming Power: 0.5W)')
 xlabel('Jamming Distance (m)')
 ylabel('BER')
-legend({'Gauss','Sine'},'Location','northwest');
+legend({'NoJam', 'Gauss','Sine'},'Location','northwest');
