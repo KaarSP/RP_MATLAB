@@ -51,8 +51,10 @@ gauss_SNR = SNR_matrix(:,3);
 sine_SNR  = SNR_matrix(:,4);
 
 % Plot 
-y_value1 = 26.4;  % SNR threshold for constant Jamming Distance 
-y_value2 = 24.2;  % SNR threshold for constant Relative Jamming Power
+y1_value1 = 26;  % SNR threshold for constant Jamming Distance 
+y1_value2 = 15;  % SNR threshold for constant Jamming Distance 
+y2_value1 = 24.2;  % SNR threshold for constant Relative Jamming Power
+y2_value2 = 15;  % SNR threshold for constant Relative Jamming Power
 
 figure;
 plot(jamPower(jamIndex1),noJam_SNR(jamIndex1),'*');
@@ -60,8 +62,11 @@ hold on;
 plot(jamPower(jamIndex1),gauss_SNR(jamIndex1),'m*');
 hold on;
 plot(jamPower(jamIndex1),sine_SNR(jamIndex1),'g*');
-yline(y_value1, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y_value1, [num2str(y_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y1_value1, '--r', 'LineWidth', 1.5);  
+text(max(jamPower)-0.125, y1_value1, [num2str(y1_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y1_value2, '--r', 'LineWidth', 1.5);  
+text(max(jamPower)-0.125, y1_value2, [num2str(y1_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+
 figName = sprintf('Relative Jamming Power vs SNR (Constant Jamming Distance: 10m)');
 title(figName)
 xlabel('Relative Jamming Power')
@@ -75,8 +80,11 @@ plot(jamDistance(jamIndex2),gauss_SNR(jamIndex2),'m*');
 hold on;
 plot(jamDistance(jamIndex2),sine_SNR(jamIndex2),'g*');
 xticks([1:2:21 22]);  
-yline(y_value2, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-2, y_value2, [num2str(y_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y2_value1, '--r', 'LineWidth', 1.5);  
+text(max(jamDistance)-2, y2_value1, [num2str(y2_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y2_value2, '--r', 'LineWidth', 1.5);  
+text(max(jamDistance)-2, y2_value2, [num2str(y2_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+
 figName = sprintf('Jamming Distance vs SNR (Constant Relative Jamming Power: 0.5W)');
 title(figName)
 xlabel('Jamming Distance (m)')

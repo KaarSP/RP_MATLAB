@@ -59,8 +59,10 @@ sine_dB  = EVM_dB_matrix(:,4);
 % sine_rms  = EVM_rms_matrix(:,4);
 
 % Plot
-y_value1 = -14.93;  % EVM threshold for constant Jamming Distance 
-y_value2 = -14.7;   % EVM threshold for constant Relative Jamming Power
+y1_value1 = -14.93;  % EVM threshold for constant Jamming Distance 
+y1_value2 = -8;  % EVM threshold for constant Jamming Distance 
+y2_value1 = -14.7;   % EVM threshold for constant Relative Jamming Power
+y2_value2 = -8;   % EVM threshold for constant Relative Jamming Power
 
 figure;
 plot(jamPower(jamIndex1),noJam_dB(jamIndex1),'*');
@@ -69,8 +71,11 @@ plot(jamPower(jamIndex1),gauss_dB(jamIndex1),'m*');
 hold on;
 plot(jamPower(jamIndex1),sine_dB(jamIndex1),'g*');
 hold on;
-yline(y_value1, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y_value1, [num2str(y_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y1_value1, '--r', 'LineWidth', 1.5);  
+text(max(jamPower)-0.125, y1_value1, [num2str(y1_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+
+yline(y1_value2, '--r', 'LineWidth', 1.5);  
+text(max(jamPower)-0.125, y1_value2, [num2str(y1_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 figName = sprintf('Relative Jamming Power vs EVM (Constant Jamming Distance: 10m)');
 title(figName)
 xlabel('Relative Jamming Power')
@@ -85,8 +90,11 @@ hold on;
 plot(jamDistance(jamIndex2),sine_dB(jamIndex2),'g*');
 hold on;
 xticks([1:2:21 22]);
-yline(y_value2, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-2, y_value2, [num2str(y_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y2_value1, '--r', 'LineWidth', 1.5);  
+text(max(jamDistance)-2, y2_value1, [num2str(y2_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y2_value2, '--r', 'LineWidth', 1.5);  
+text(max(jamDistance)-1, y2_value2, [num2str(y2_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+
 title('Jamming Distance vs EVM (Constant Relative Jamming Power: 0.5W)')
 xlabel('Jamming Distance (m)')
 ylabel('EVM (dB)')
