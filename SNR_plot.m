@@ -64,7 +64,7 @@ yline(y_value1, '--r', 'LineWidth', 1.5);
 text(max(jamPower)-0.125, y_value1, [num2str(y_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 figName = sprintf('Relative Jamming Power vs SNR (Constant Jamming Distance: 10m)');
 title(figName)
-xlabel('Relative Jamming Power (W)')
+xlabel('Relative Jamming Power')
 ylabel('SNR (dB)')
 legend({'No Jam','Gauss','Sine'},'Location','southwest');
 

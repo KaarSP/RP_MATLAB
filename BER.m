@@ -31,8 +31,8 @@
 tic
 
 clc
-% clearvars -except Nojamming Gaussian Sine;
-clear
+clearvars -except Nojamming Gaussian Sine;
+% clear
 close all
 
 numDataset = 31; % Total number of dataset
@@ -44,15 +44,15 @@ BER_matrix(1:numDataset,1) = 1:numDataset;
 % Plot image: (1) Plot Constellation / (0) Don't plot the constellation
 imgPlot = 1; 
 
-for ii = 1:numDataset
+for ii = 1%:numDataset
     tic
     % Load or initialize the IQ dataset
-    fileName = sprintf("../dataset/w%d.mat",ii);
-    [~, fname, ~] = fileparts(fileName);
-    fprintf("Dataset: %s\n", fname)
-    load(fileName);
+    % fileName = sprintf("../dataset/w%d.mat",ii);
+    % [~, fname, ~] = fileparts(fileName);
+    % fprintf("Dataset: %s\n", fname)
+    % load(fileName);
     
-    for i = 1
+    for i = 2
 
         % Select the type of Jamming: (2) Gaussian / (3) Sine
         jam_choice = i;

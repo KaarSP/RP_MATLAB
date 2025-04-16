@@ -29,7 +29,7 @@
 % Author: Kaarmukilan
 
 clc
-clear
+% clear
 close all
 
 numDataset = 31; % Total number of dataset
@@ -42,18 +42,18 @@ EVM_rms_matrix = zeros(numDataset,4);
 EVM_rms_matrix(1:numDataset,1) = 1:numDataset;
 
 % Save image: (1) Save image as .jpg / (0) Don't save the image
-imgSave = 0; 
+imgSave = 1; 
 
 % Plot image: (1) Plot Constellation / (0) Don't plot the constellation
-imgPlot = 0; 
+imgPlot = 1; 
 
-for ii = 1:numDataset
+for ii = 1%:numDataset
     tic
     % Load or initialize the IQ dataset
-    fileName = sprintf("../dataset/w%d.mat",ii);
-    [~, fname, ~] = fileparts(fileName);
-    sprintf("Dataset: %s", fname)
-    load(fileName);
+    % fileName = sprintf("../dataset/w%d.mat",ii);
+    % [~, fname, ~] = fileparts(fileName);
+    % sprintf("Dataset: %s", fname)
+    % load(fileName);
     
     for i = 1:3
     
@@ -127,5 +127,5 @@ for ii = 1:numDataset
     toc
 end
 
-save EVM_dB_values.mat EVM_dB_matrix
-save EVM_rms_values.mat EVM_rms_matrix
+% save EVM_dB_values.mat EVM_dB_matrix
+% save EVM_rms_values.mat EVM_rms_matrix

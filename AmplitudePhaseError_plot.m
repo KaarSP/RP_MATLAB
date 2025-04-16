@@ -53,8 +53,8 @@ gauss_ampErr = AmpError_matrix(:,3);
 sine_ampErr  = AmpError_matrix(:,4);
 
 % Plot
-y_value1 = 0.17;  % Amplitude Error threshold for constant Jamming Distance 
-y_value2 = 0.25;   % Amplitude Error threshold for constant Relative Jamming Power
+y_value1 = 0.155;  % Amplitude Error threshold for constant Jamming Distance 
+y_value2 = 0.153;   % Amplitude Error threshold for constant Relative Jamming Power
 
 figure;
 plot(jamPower(jamIndex1),noJam_ampErr(jamIndex1),'*');
@@ -63,11 +63,11 @@ plot(jamPower(jamIndex1),gauss_ampErr(jamIndex1),'m*');
 hold on;
 plot(jamPower(jamIndex1),sine_ampErr(jamIndex1),'g*');
 hold on;
-% yline(y_value1, '--r', 'LineWidth', 1.5);  
-% text(max(jamPower)-0.125, y_value1, [num2str(y_value1)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y_value1, '--r', 'LineWidth', 1.5);  
+text(max(jamPower)-0.125, y_value1, [num2str(y_value1)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 figName = sprintf('Relative Jamming Power vs Amplitude Error (Constant Jamming Distance: 10m)');
 title(figName)
-xlabel('Relative Jamming Power (W)')
+xlabel('Relative Jamming Power')
 ylabel('Amplitude Error')
 legend({'NoJam', 'Gauss','Sine'},'Location','northwest');
 
@@ -79,8 +79,8 @@ hold on;
 plot(jamDistance(jamIndex2),sine_ampErr(jamIndex2),'g*');
 hold on;
 xticks([1:2:21 22]);
-% yline(y_value2, '--r', 'LineWidth', 1.5);  
-% text(max(jamDistance)-2, y_value2, [num2str(y_value2)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+yline(y_value2, '--r', 'LineWidth', 1.5);  
+text(max(jamDistance)-2, y_value2, [num2str(y_value2)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 title('Jamming Distance vs Amplitude Error (Constant Relative Jamming Power: 0.5W)')
 xlabel('Jamming Distance (m)')
 ylabel('Amplitude Error')
@@ -105,7 +105,7 @@ hold on;
 % text(max(jamPower)-0.125, y_value3, [num2str(y_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 figName = sprintf('Relative Jamming Power vs Phase Error (Constant Jamming Distance: 10m)');
 title(figName)
-xlabel('Relative Jamming Power (W)')
+xlabel('Relative Jamming Power')
 ylabel('Phase Error')
 legend({'NoJam', 'Gauss','Sine'},'Location','northwest');
 
