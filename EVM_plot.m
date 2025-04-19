@@ -36,8 +36,9 @@ close all
 jamIndex1 = 1:23;  % Constant Jamming Distance
 jamIndex2 = 24:31; % Constant Relative Jamming Power
 
-% Jamming Power (W)
-jamPower = [0.1 0.3 0.6 0.1 0.3 0.6 0.2 0.2 0.4 0.4 0.5 0.5 0.7 0.7 0.8 0.8 0.6 0.6 repmat(0.5,1,13)];
+% Jamming Power (dBm)
+% jamPower = [0.1 0.3 0.6 0.1 0.3 0.6 0.2 0.2 0.4 0.4 0.5 0.5 0.7 0.7 0.8 0.8 0.6 0.6 repmat(0.5,1,13)]; % RJP
+jamPower = [-13 -7  2.8 -13 -7  2.8 -10 -10 -3.5 -3.5 0 0   6   6   9   9   2.8 2.8 zeros(1,13)];
 
 % Jammind Distance (m)
 jamDistance = [repmat(10,1,23) 3 5 7 10 13 16 19 21];
@@ -71,14 +72,14 @@ plot(jamPower(jamIndex1),gauss_dB(jamIndex1),'m*');
 hold on;
 plot(jamPower(jamIndex1),sine_dB(jamIndex1),'g*');
 hold on;
+xticks(-13:2:10);
 yline(y1_value1, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y1_value1, [num2str(y1_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
-
+text(max(jamPower)-2.7, y1_value1 + 0.05, [num2str(y1_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 yline(y1_value2, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y1_value2, [num2str(y1_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
-figName = sprintf('Relative Jamming Power vs EVM (Constant Jamming Distance: 10m)');
+text(max(jamPower)-1.5, y1_value2, [num2str(y1_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+figName = sprintf('Jamming Power vs EVM (Constant Jamming Distance: 10m)');
 title(figName)
-xlabel('Relative Jamming Power')
+xlabel('Jamming Power (dBm)')
 ylabel('EVM (dB)')
 legend({'No Jam','Gauss','Sine'},'Location','northwest');
 
@@ -91,11 +92,11 @@ plot(jamDistance(jamIndex2),sine_dB(jamIndex2),'g*');
 hold on;
 xticks([1:2:21 22]);
 yline(y2_value1, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-2, y2_value1, [num2str(y2_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+text(max(jamDistance) -2, y2_value1, [num2str(y2_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 yline(y2_value2, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-1, y2_value2, [num2str(y2_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
-
-title('Jamming Distance vs EVM (Constant Relative Jamming Power: 0.5W)')
+text(max(jamDistance) -1, y2_value2, [num2str(y2_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+title('Jamming Distance vs EVM (Constant Jamming Power: 0dBm)')
 xlabel('Jamming Distance (m)')
 ylabel('EVM (dB)')
 legend({'No Jam','Gauss','Sine'},'Location','northwest');
+axis([0 22 -16 0])

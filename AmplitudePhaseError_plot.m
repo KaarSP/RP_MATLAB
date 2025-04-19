@@ -36,8 +36,9 @@ close all
 jamIndex1 = 1:23;  % Constant Jamming Distance
 jamIndex2 = 24:31; % Constant Relative Jamming Power
 
-% Jamming Power (W)
-jamPower = [0.1 0.3 0.6 0.1 0.3 0.6 0.2 0.2 0.4 0.4 0.5 0.5 0.7 0.7 0.8 0.8 0.6 0.6 repmat(0.5,1,13)];
+% Jamming Power (dBm)
+% jamPower = [0.1 0.3 0.6 0.1 0.3 0.6 0.2 0.2 0.4 0.4 0.5 0.5 0.7 0.7 0.8 0.8 0.6 0.6 repmat(0.5,1,13)]; % RJP
+jamPower = [-13 -7  2.8 -13 -7  2.8 -10 -10 -3.5 -3.5 0 0   6   6   9   9   2.8 2.8 repmat(0,1,13)];
 
 % Jammind Distance (m)
 jamDistance = [repmat(10,1,23) 3 5 7 10 13 16 19 21];
@@ -65,15 +66,17 @@ plot(jamPower(jamIndex1),gauss_ampErr(jamIndex1),'m*');
 hold on;
 plot(jamPower(jamIndex1),sine_ampErr(jamIndex1),'g*');
 hold on;
+xticks(-13:2:10);
 yline(y1_value1, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y1_value1, [num2str(y1_value1)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+text(max(jamPower)-2, y1_value1, [num2str(y1_value1)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 yline(y1_value2, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y1_value2, [num2str(y1_value2)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
-figName = sprintf('Relative Jamming Power vs Amplitude Error (Constant Jamming Distance: 10m)');
+text(max(jamPower)-2, y1_value2, [num2str(y1_value2)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+figName = sprintf('Jamming Power vs Amplitude Error (Constant Jamming Distance: 10m)');
 title(figName)
-xlabel('Relative Jamming Power')
+xlabel('Jamming Power (dBm)')
 ylabel('Amplitude Error')
 legend({'NoJam', 'Gauss','Sine'},'Location','northwest');
+axis([-14 10 0.1 0.4]);
 
 figure;
 plot(jamDistance(jamIndex2),noJam_ampErr(jamIndex2),'*');
@@ -84,10 +87,10 @@ plot(jamDistance(jamIndex2),sine_ampErr(jamIndex2),'g*');
 hold on;
 xticks([1:2:21 22]);
 yline(y2_value1, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-2, y2_value1, [num2str(y2_value1)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+text(max(jamDistance)-1, y2_value1, [num2str(y2_value1)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 yline(y2_value2, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-2, y2_value2, [num2str(y2_value2)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
-title('Jamming Distance vs Amplitude Error (Constant Relative Jamming Power: 0.5W)')
+text(max(jamDistance)-1, y2_value2, [num2str(y2_value2)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+title('Jamming Distance vs Amplitude Error (Constant Jamming Power: 0dBm)')
 xlabel('Jamming Distance (m)')
 ylabel('Amplitude Error')
 legend({'NoJam', 'Gauss','Sine'},'Location','northwest');
@@ -99,7 +102,7 @@ sine_phaseErr  = PhaseError_matrix(:,4);
 % Plot
 y3_value1 = 1.576;  % Phase Error threshold for constant Jamming Distance 
 y3_value2 = 1.567;  % Phase Error threshold for constant Jamming Distance
-y3_value3 = 1.583;  % Phase Error threshold for constant Jamming Distance 
+y3_value3 = 1.588;  % Phase Error threshold for constant Jamming Distance 
 y3_value4 = 1.555;  % Phase Error threshold for constant Jamming Distance
 
 y4_value1 = 1.60;   % Phase Error threshold for constant Relative Jamming Power
@@ -114,20 +117,21 @@ plot(jamPower(jamIndex1),gauss_phaseErr(jamIndex1),'m*');
 hold on;
 plot(jamPower(jamIndex1),sine_phaseErr(jamIndex1),'g*');
 hold on;
+xticks(-13:2:10);
 yline(y3_value1, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y3_value1, [num2str(y3_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+text(max(jamPower)-1.2, y3_value1, [num2str(y3_value1)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 9, 'Color','r');
 yline(y3_value2, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y3_value2, [num2str(y3_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+text(max(jamPower)-1.2, y3_value2-0.007, [num2str(y3_value2)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 9, 'Color','r');
 yline(y3_value3, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y3_value3, [num2str(y3_value3),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+text(max(jamPower)-1.2, y3_value3, [num2str(y3_value3)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 9, 'Color','r');
 yline(y3_value4, '--r', 'LineWidth', 1.5);  
-text(max(jamPower)-0.125, y3_value4, [num2str(y3_value4),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
-figName = sprintf('Relative Jamming Power vs Phase Error (Constant Jamming Distance: 10m)');
+text(max(jamPower)-1.2, y3_value4-0.007, [num2str(y3_value4)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 9, 'Color','r');
+figName = sprintf('Jamming Power vs Phase Error (Constant Jamming Distance: 10m)');
 title(figName)
-xlabel('Relative Jamming Power')
+xlabel('Jamming Power (dBm)')
 ylabel('Phase Error')
 legend({'NoJam', 'Gauss','Sine'},'Location','northwest');
-axis([0.1 0.8 1.4951 1.6682])
+axis([-14 10 1.4951 1.6682])
 
 figure;
 plot(jamDistance(jamIndex2),noJam_phaseErr(jamIndex2),'*');
@@ -138,15 +142,15 @@ plot(jamDistance(jamIndex2),sine_phaseErr(jamIndex2),'g*');
 hold on;
 xticks([1:2:21 22]);
 yline(y4_value1, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-2, y4_value1, [num2str(y4_value1),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+text(max(jamDistance)-1.13, y4_value1, [num2str(y4_value1)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 yline(y4_value2, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-2, y4_value2, [num2str(y4_value2),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+text(max(jamDistance)-1.5, y4_value2-0.04, [num2str(y4_value2)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 yline(y4_value3, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-2, y4_value3, [num2str(y4_value3),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+text(max(jamDistance)-1.5, y4_value3, [num2str(y4_value3)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
 yline(y4_value4, '--r', 'LineWidth', 1.5);  
-text(max(jamDistance)-2, y4_value4, [num2str(y4_value4),'dB'], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
-title('Jamming Distance vs Phase Error (Constant Relative Jamming Power: 0.5W)')
+text(max(jamDistance)-1.13, y4_value4, [num2str(y4_value4)], 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'left', 'FontSize', 11, 'Color','r');
+title('Jamming Distance vs Phase Error (Constant Jamming Power: 0dBm)')
 xlabel('Jamming Distance (m)')
 ylabel('Phase Error')
-legend({'NoJam', 'Gauss','Sine'},'Location','southwest');
+legend({'NoJam', 'Gauss','Sine'},'Location','northeast');
 axis([1 22 1.2243 2])
