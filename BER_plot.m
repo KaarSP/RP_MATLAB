@@ -75,7 +75,8 @@ title(figName)
 xlabel('Jamming Power (dBm)')
 ylabel('BER')
 legend({'NoJam', 'Gauss','Sine'},'Location','northwest');
-axis([-13 10 0 0.016])
+% axis([-13 10 0 0.016])
+axis([-13 10 0 0.0001])  % Zoomed plot
 
 figure;
 plot(jamDistance(jamIndex2),noJam_ber(jamIndex2),'*');
@@ -93,4 +94,5 @@ title('Jamming Distance vs BER (Constant Jamming Power: 0dBm)')
 xlabel('Jamming Distance (m)')
 ylabel('BER')
 legend({'NoJam', 'Gauss','Sine'},'Location','northwest');
-axis([0 22 0 0.002])
+% axis([0 22 0 0.002])
+axis([0 22 0 0.0001])  % Zoomed plot
