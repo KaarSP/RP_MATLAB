@@ -30,7 +30,7 @@
 
 clc
 clear
-close all
+% close all
 
 % Parameters
 jamIndex1 = 1:23;  % Constant Jamming Distance
@@ -42,9 +42,16 @@ load EVM_dB_gauss.mat % Gauss
 load EVM_dB_sine.mat  % Sine
 
 % Select the dataset to be plotted
-dataset = 3;  % Values from 1 to 31
+dataset = 15;  % Values from 1 to 31
 
-data = EVM_noJam(dataset,:);
+option = 3; % 1: No Jamming, 2:Sine, 3:Gauss
+if option == 1
+    data = EVM_noJam(dataset,:);
+elseif option == 2
+    data = EVM_sine(dataset,:);
+elseif option == 3
+    data = EVM_gauss(dataset,:);
+end
 
 % Fit a normal distribution
 pd = fitdist(data', 'Normal');
@@ -56,7 +63,7 @@ y = pdf(pd, x);
 % Plot histogram and fitted curve
 figure;
 histogram(data, 'Normalization', 'pdf', 'NumBins', 20); hold on;
-plot(x, y, 'r-', 'LineWidth', 2);
+plot(x, y, 'r-', 'LineWidth', 1);
 
 % % Add peak point (mean of fitted normal distribution)
 % [~, idx_peak] = max(y); % peak index in y
@@ -68,11 +75,11 @@ x_peak = pd.mu;
 y_peak = pdf(pd, x_peak);
 
 % Plot the peak
-plot(x_peak, y_peak, 'g*', 'MarkerSize', 8);
+plot(x_peak, y_peak, 'r*', 'MarkerSize', 8);
 % text(x_peak, y_peak + 0.01, sprintf('Peak at %.2f', x_peak), 'HorizontalAlignment', 'center');
 
 % Labels and formatting
-xlabel('Value');
+xlabel('EVM (dB)');
 ylabel('Probability Density');
 legend('Data Histogram', 'Fitted Normal PDF', 'Peak');
 title('Histogram with Normal Fit and Peak');
