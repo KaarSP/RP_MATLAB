@@ -33,7 +33,7 @@ clear
 close all
 
 numDataset = 31; % Total number of dataset
-images = 1:100; % Number of images selected
+images = 1:2:200; % Number of images selected
 
 % Initialization
 EVM_dB_matrix = zeros(numDataset,4);
